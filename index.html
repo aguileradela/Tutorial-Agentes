@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tutorial: Cómo crear un Agente Inteligente con IA</title>
+<style>
+:root{--bg:#f7f6f2;--sf:#fff;--tx:#1d1d1b;--mu:#66655f;--ac:#c4552d;--ac2:#fbe9e1;--bd:#e3e1d8;--ok:#2f7d4f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171716;--sf:#222220;--tx:#efeee8;--mu:#a3a198;--ac:#ef8a64;--ac2:#3a2a22;--bd:#37362f;--ok:#6fcf97;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#171716;--sf:#222220;--tx:#efeee8;--mu:#a3a198;--ac:#ef8a64;--ac2:#3a2a22;--bd:#37362f;--ok:#6fcf97;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+nav{position:fixed;left:0;top:0;bottom:0;width:230px;background:var(--sf);border-right:1px solid var(--bd);padding:calc(16px + env(safe-area-inset-top,0px)) 12px 16px;overflow:auto}
+nav h1{font-size:15px;margin:0 0 4px}nav small{color:var(--mu)}
+nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--tx);text-decoration:none;font-size:14px;margin-top:2px}
+nav a:hover,nav a.on{background:var(--ac2);color:var(--ac)}
+.bar{height:6px;background:var(--bd);border-radius:9px;margin:12px 0;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok);width:0;transition:.3s}
+main{margin-left:230px;max-width:900px;padding:24px 28px 80px}
+section{padding:28px 0;border-bottom:1px solid var(--bd)}
+h2{font-size:26px;margin:0 0 6px}h3{margin:18px 0 6px;font-size:17px}p{margin:8px 0}.mu{color:var(--mu)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:12px 0}
+.card,.box{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px}
+.card{cursor:pointer;transition:.15s}.card:hover,.card.on{border-color:var(--ac);background:var(--ac2)}
+.card b{display:block}.card span{font-size:13px;color:var(--mu)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+button,select,input,textarea{font:inherit;color:var(--tx)}
+.tb{border:1px solid var(--bd);background:var(--sf);padding:6px 12px;border-radius:99px;cursor:pointer}
+.tb.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.pri{background:var(--ac);color:#fff;border:0;padding:9px 16px;border-radius:9px;cursor:pointer}
+input,select,textarea{width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:8px;margin:3px 0 8px}
+textarea{min-height:150px;font:13px/1.5 ui-monospace,Consolas,monospace}
+label{font-size:13px;font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+pre{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px;overflow-x:auto;font-size:13px;margin:8px 0}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--bd);cursor:pointer}
+.ck input{width:auto;margin:5px 0 0}
+.arch{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.arch .card{flex:1 1 120px;text-align:center}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--ac2);color:var(--ac);margin:2px 3px 0 0}
+#cm{position:fixed;display:none;z-index:50;min-width:210px;background:var(--sf);border:1px solid var(--bd);border-radius:10px;box-shadow:0 8px 28px #0003;padding:6px}
+#cm div{padding:7px 10px;border-radius:6px;cursor:pointer;font-size:14px}#cm div:hover{background:var(--ac2)}#cm hr{border:0;border-top:1px solid var(--bd);margin:4px 0}
+#fab{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:0;background:var(--ac);color:#fff;font-size:20px;cursor:pointer;z-index:40}
+.q button{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 12px;border:1px solid var(--bd);background:var(--sf);border-radius:8px;cursor:pointer}
+.q .good{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,transparent)}.q .bad{border-color:#c0392b}
+@media(max-width:800px){nav{display:none}main{margin:0;padding:16px}.two{grid-template-columns:1fr}}
+</style></head><body>
+<nav id="nav"><h1>🤖 Agentes con IA</h1><small>Tutorial interactivo</small><div class="bar"><i id="pb"></i></div></nav>
+<main>
+<section id="inicio"><h2>Cómo pedirle a una IA que cree un Agente Inteligente</h2>
+<p class="mu">Recorre los módulos en orden o salta con el menú. <b>Clic derecho</b> en cualquier parte (o el botón ☰) abre el menú contextual. Marca los pasos que completes y mira tu progreso.</p>
+<div class="box"><b>Idea central:</b> la IA genera tan bien como tú describes. Un buen pedido define <i>quién es el agente, qué percibe, qué decide, qué herramientas usa, dónde guarda datos y qué límites tiene</i>.</div></section>
+
+<section id="tipos"><h2>1. Tipos de agentes inteligentes</h2><p class="mu">Toca un tipo para ver su detalle y cuándo elegirlo.</p>
+<div class="grid" id="tg"></div><div class="box" id="td"></div></section>
+
+<section id="describir"><h2>2. Qué describirle a la IA</h2><p class="mu">Completa los campos y obtén un prompt listo para pegar en Claude.</p>
+<div class="two"><div>
+<label>Rol / nombre del agente</label><input id="f1" value="Agente de atención a clientes de una tienda en línea">
+<label>Objetivo</label><input id="f2" value="Resolver consultas de pedidos y recomendar productos">
+<label>Entorno y usuarios</label><input id="f3" value="Chat web; clientes finales y personal de ventas">
+<label>Herramientas / acciones</label><input id="f4" value="Consultar base de datos, enviar correos, crear tickets">
+<label>Memoria</label><input id="f5" value="Historial del cliente y de la conversación">
+<label>Reglas y límites</label><input id="f6" value="No reembolsar sin aprobación humana; no inventar datos">
+<label>Formato de respuesta</label><input id="f7" value="Español, breve, con pasos numerados">
+<label>Criterio de éxito</label><input id="f8" value="Resolver 80% de consultas sin intervención humana">
+</div><div><label>Prompt generado</label><textarea id="pr" readonly></textarea><button class="pri" onclick="cp('pr')">Copiar prompt</button> <span id="ok1" class="mu"></span></div></div></section>
+
+<section id="nube"><h2>3. Componentes de un sistema en la nube</h2><p class="mu">Ejemplo clásico: <b>tienda en línea</b>. Toca cada pieza.</p>
+<div class="arch" id="ar"></div><div class="box" id="ad"></div>
+<h3>Qué definir al pedirlo</h3><p>Tipo de usuarios y roles · módulos (catálogo, carrito, pedidos, pagos) · tecnologías preferidas · base de datos y tablas · seguridad · despliegue · pantallas esperadas · datos de ejemplo.</p></section>
+
+<section id="bd"><h2>4. Gestores de bases de datos y relaciones</h2>
+<div class="tabs" id="bt"></div><div class="grid" id="bg"></div>
+<h3>Relaciones entre tablas (ejemplo tienda)</h3><p class="mu">Elige una relación para ver cómo describirla y su SQL.</p>
+<div class="tabs" id="rt"></div><div class="box" id="rd"></div></section>
+
+<section id="editores"><h2>5. Editores de tablas y bases de datos</h2>
+<div class="tabs" id="et"></div><div class="grid" id="eg"></div></section>
+
+<section id="proceso"><h2>6. Proceso: pedirle a Claude un sistema para un rubro</h2>
+<div class="two"><div><label>Rubro o segmento</label><select id="rb" onchange="rub()"></select>
+<label>Nombre del sistema</label><input id="sn" oninput="rub()" placeholder="Ej. AgroControl">
+<label>Tipo de agente</label><select id="ag" onchange="rub()"></select>
+<h3>Checklist</h3><div id="ck"></div></div>
+<div><label>Prompt para Claude</label><textarea id="rp" style="min-height:330px" readonly></textarea><button class="pri" onclick="cp('rp')">Copiar prompt</button> <span id="ok2" class="mu"></span></div></div>
+<h3>Itera</h3><p>Pide primero el modelo de datos, luego el backend, luego las pantallas. Prueba, reporta errores con captura y pide ajustes concretos.</p></section>
+
+<section id="quiz"><h2>7. Comprueba lo aprendido</h2><div class="q" id="qz"></div></section>
+</main>
+<button id="fab" aria-label="Menú">☰</button><div id="cm"></div>
+<script>
+const $=id=>document.getElementById(id);
+const secs=[["inicio","Inicio"],["tipos","1. Tipos de agentes"],["describir","2. Qué describir"],["nube","3. Sistema en la nube"],["bd","4. Bases de datos"],["editores","5. Editores"],["proceso","6. Proceso por rubro"],["quiz","7. Quiz"]];
+$("nav").insertAdjacentHTML("beforeend",secs.map(s=>`<a href="#${s[0]}" data-s="${s[0]}">${s[1]}</a>`).join(""));
+const TIPOS=[["Reflejo simple","Reacciona a lo que percibe con reglas si-entonces, sin memoria.","Termostato, filtro de spam, alertas por umbral.","Reglas claras y entorno predecible."],
+["Basado en modelo","Mantiene un estado interno del mundo y lo actualiza.","Control de inventario, robot aspiradora.","Cuando no todo es observable directamente."],
+["Basado en objetivos","Planifica acciones para alcanzar una meta.","Rutas de reparto, planificador de citas.","Cuando hay varias secuencias posibles."],
+["Basado en utilidad","Elige la acción que maximiza una medida de valor.","Precios dinámicos, recomendador de ofertas.","Cuando hay compromisos: costo, tiempo, riesgo."],
+["Con aprendizaje","Mejora con la experiencia y la retroalimentación.","Detección de fraude, predicción de demanda.","Cuando hay datos históricos abundantes."],
+["Agente LLM con herramientas","Un modelo de lenguaje razona, llama herramientas (APIs, BD) y verifica resultados.","Asistente de soporte, analista de datos.","Tareas abiertas en lenguaje natural."],
+["Multiagente","Varios agentes especializados que colaboran o se supervisan.","Ventas + inventario + facturación coordinados.","Procesos grandes con roles separados."]];
+$("tg").innerHTML=TIPOS.map((t,i)=>`<div class="card" onclick="tipo(${i})"><b>${t[0]}</b><span>${t[1]}</span></div>`).join("");
+function tipo(i){const t=TIPOS[i];document.querySelectorAll("#tg .card").forEach((c,j)=>c.classList.toggle("on",i==j));$("td").innerHTML=`<b>${t[0]}</b><p>${t[1]}</p><p><b>Ejemplos:</b> ${t[2]}</p><p><b>Úsalo cuando:</b> ${t[3]}</p>`}tipo(5);
+function pr(){const g=i=>$("f"+i).value;$("pr").value=`Actúa como arquitecto de software. Crea un agente inteligente con estas especificaciones:\n\nROL: ${g(1)}\nOBJETIVO: ${g(2)}\nENTORNO Y USUARIOS: ${g(3)}\nHERRAMIENTAS Y ACCIONES: ${g(4)}\nMEMORIA: ${g(5)}\nREGLAS Y LÍMITES: ${g(6)}\nFORMATO DE RESPUESTA: ${g(7)}\nCRITERIO DE ÉXITO: ${g(8)}\n\nEntrega: 1) diseño del flujo percibir-decidir-actuar, 2) prompt de sistema, 3) código, 4) casos de prueba.`}
+for(let i=1;i<=8;i++)$("f"+i).oninput=pr;pr();
+function cp(id){const t=$(id);t.select();try{navigator.clipboard.writeText(t.value)}catch(e){try{document.execCommand("copy")}catch(_){}}const o=$(id=="pr"?"ok1":"ok2");o.textContent="¡Copiado!";setTimeout(()=>o.textContent="",1800)}
+const ARQ=[["🖥️ Frontend","Páginas y formularios que ve el usuario: catálogo, carrito, panel.","React, Vue, HTML/CSS/JS"],["⚙️ Backend / API","Lógica de negocio y endpoints que conectan todo.","Node.js, Python (FastAPI/Django), Java"],["🗄️ Base de datos","Guarda clientes, productos, pedidos y pagos.","PostgreSQL, MySQL, MongoDB"],["🔐 Autenticación","Registro, inicio de sesión, roles y permisos.","JWT, OAuth, Auth0, Supabase Auth"],["💳 Servicios externos","Pagos, correo, mensajería, mapas.","Stripe, Mercado Pago, SendGrid"],["📦 Almacenamiento","Imágenes y archivos.","AWS S3, Cloudflare R2"],["☁️ Hosting y monitoreo","Dónde corre y cómo se vigila.","AWS, Azure, GCP, Vercel, Render"]];
+$("ar").innerHTML=ARQ.map((a,i)=>`<div class="card" onclick="arq(${i})"><b>${a[0]}</b></div>`).join("");
+function arq(i){const a=ARQ[i];document.querySelectorAll("#ar .card").forEach((c,j)=>c.classList.toggle("on",i==j));$("ad").innerHTML=`<b>${a[0]}</b><p>${a[1]}</p><p><b>Opciones:</b> ${a[2]}</p><p class="mu">En tu prompt indica qué opción prefieres y por qué.</p>`}arq(0);
+const BD=[["Relacional","PostgreSQL","Robusto, gratuito, JSON y extensiones. Muy buena opción por defecto."],["Relacional","MySQL / MariaDB","Popular en web, hosting económico y gran comunidad."],["Relacional","SQL Server","Ecosistema Microsoft/.NET, integración con Azure."],["Relacional","Oracle Database","Grandes empresas, alta disponibilidad, licencia costosa."],["Relacional","SQLite","Archivo único; ideal para prototipos y apps pequeñas."],["NoSQL","MongoDB","Documentos JSON flexibles; esquemas cambiantes."],["NoSQL","Redis","Clave-valor en memoria: caché y sesiones."],["NoSQL","Firebase / Firestore","Tiempo real y móvil, sin servidor propio."],["NoSQL","DynamoDB","Escalado masivo en AWS."],["Nube gestionada","Supabase","PostgreSQL en la nube con autenticación y API listas."],["Nube gestionada","Amazon RDS / Azure SQL / Cloud SQL","Motores relacionales administrados por el proveedor."]];
+function filt(tid,gid,data,k){const cats=["Todos",...new Set(data.map(d=>d[0]))];$(tid).innerHTML=cats.map((c,i)=>`<button class="tb ${i?"":"on"}" data-c="${c}">${c}</button>`).join("");
+const draw=c=>{$(gid).innerHTML=data.filter(d=>c=="Todos"||d[0]==c).map(d=>`<div class="card"><b>${d[1]}</b><span class="tag">${d[0]}</span><br><span>${d[2]}</span></div>`).join("")};
+$(tid).onclick=e=>{const b=e.target.closest("button");if(!b)return;[...$(tid).children].forEach(x=>x.classList.toggle("on",x==b));draw(b.dataset.c)};draw("Todos")}
+filt("bt","bg",BD);
+const ED=[["Cliente SQL","DBeaver","Multimotor, gratuito, editor de tablas y diagramas ER."],["Cliente SQL","DataGrip","IDE de JetBrains (de pago) con autocompletado avanzado."],["Cliente SQL","TablePlus","Interfaz ligera y moderna para varios motores."],["Cliente SQL","Beekeeper Studio","Cliente de código abierto, sencillo."],["Específico","pgAdmin","Oficial de PostgreSQL."],["Específico","MySQL Workbench","Oficial de MySQL: modelado y administración."],["Específico","HeidiSQL","Ligero para MySQL/MariaDB/PostgreSQL en Windows."],["Específico","SSMS / Azure Data Studio","Herramientas de Microsoft para SQL Server."],["Específico","MongoDB Compass","Explorador visual de colecciones."],["Específico","DB Browser for SQLite","Editor visual de archivos SQLite."],["Diseño de modelos","dbdiagram.io","Diagramas ER a partir de texto, exporta SQL."],["Diseño de modelos","DrawSQL","Diseño visual colaborativo de esquemas."],["Diseño de modelos","Lucidchart / draw.io","Diagramas generales y ER."],["Diseño de modelos","Supabase Studio","Editor de tablas web integrado a Supabase."]];
+filt("et","eg",ED);
+const REL=[["1 a N","Cliente → Pedidos","Un cliente tiene muchos pedidos; cada pedido pertenece a un cliente.","CREATE TABLE pedidos (\n  id SERIAL PRIMARY KEY,\n  cliente_id INT NOT NULL REFERENCES clientes(id),\n  fecha TIMESTAMP DEFAULT now()\n);"],
+["N a M","Pedidos ↔ Productos","Un pedido incluye muchos productos y un producto aparece en muchos pedidos. Se resuelve con tabla intermedia.","CREATE TABLE detalle_pedido (\n  pedido_id INT REFERENCES pedidos(id),\n  producto_id INT REFERENCES productos(id),\n  cantidad INT NOT NULL,\n  precio_unitario NUMERIC(10,2),\n  PRIMARY KEY (pedido_id, producto_id)\n);"],
+["1 a N","Categoría → Productos","Cada producto tiene una categoría; una categoría agrupa muchos productos.","ALTER TABLE productos\n  ADD COLUMN categoria_id INT REFERENCES categorias(id);"],
+["1 a 1","Usuario ↔ Perfil","Cada usuario tiene exactamente un perfil.","CREATE TABLE perfiles (\n  usuario_id INT PRIMARY KEY REFERENCES usuarios(id),\n  telefono VARCHAR(20)\n);"]];
+$("rt").innerHTML=REL.map((r,i)=>`<button class="tb ${i?"":"on"}" onclick="rel(${i})">${r[0]}: ${r[1]}</button>`).join("");
+function rel(i){[...$("rt").children].forEach((x,j)=>x.classList.toggle("on",i==j));const r=REL[i];$("rd").innerHTML=`<b>${r[1]} (${r[0]})</b><p>${r[2]}</p><p><b>Cómo pedirlo:</b> «Relaciona ${r[1].replace("→","con").replace("↔","con")} como ${r[0]}, con llaves foráneas e integridad referencial».</p><pre>${r[3]}</pre>`}rel(0);
+const RUB={"Agricultura":["parcelas, cultivos, siembras, cosechas, insumos, riegos","Basado en modelo (clima y suelo)"],"Salud (clínica)":["pacientes, médicos, citas, expedientes, recetas, facturas","Basado en objetivos"],"Educación":["alumnos, cursos, docentes, inscripciones, calificaciones, asistencia","Con aprendizaje"],"Comercio / Retail":["clientes, productos, categorías, pedidos, detalle_pedido, proveedores","Basado en utilidad"],"Restaurantes":["mesas, reservas, platillos, pedidos, ingredientes, proveedores","Agente LLM con herramientas"],"Logística y transporte":["vehículos, conductores, rutas, envíos, entregas, incidencias","Basado en objetivos"],"Manufactura":["órdenes de producción, materias primas, máquinas, mantenimientos, lotes","Con aprendizaje"],"Servicios financieros":["clientes, cuentas, transacciones, préstamos, pagos, alertas de fraude","Con aprendizaje"]};
+$("rb").innerHTML=Object.keys(RUB).map(k=>`<option>${k}</option>`).join("");
+$("ag").innerHTML=TIPOS.map(t=>`<option>${t[0]}</option>`).join("");
+const PASOS=["Definir el problema y los usuarios","Elegir el tipo de agente","Listar entidades y relaciones (tablas)","Escoger gestor de base de datos","Diseñar el esquema en un editor (p. ej. dbdiagram.io)","Describir módulos, roles y seguridad","Pedir a Claude el sistema por partes","Probar con datos de ejemplo","Corregir y desplegar en la nube"];
+$("ck").innerHTML=PASOS.map((p,i)=>`<label class="ck"><input type="checkbox" onchange="prog()"><span style="font-weight:400">${p}</span></label>`).join("");
+function rub(){const r=$("rb").value,d=RUB[r],n=$("sn").value||"MiSistema";const a=$("ag");if(event&&event.target&&event.target.id=="rb"){a.value=d[1].split(" (")[0]}
+$("rp").value=`Quiero que generes un sistema web en la nube llamado «${n}» para el rubro: ${r}.\n\n1) OBJETIVO: gestionar de forma digital las operaciones principales del rubro.\n2) AGENTE INTELIGENTE: tipo «${a.value}», que automatice decisiones, alerte y responda consultas.\n3) ENTIDADES (tablas): ${d[0]}.\n4) RELACIONES: indica 1:N y N:M con llaves foráneas.\n5) BASE DE DATOS: PostgreSQL. Entrega el script SQL.\n6) BACKEND: API REST con autenticación y roles (administrador, operador, consulta).\n7) FRONTEND: panel con tablas, formularios, filtros y gráficas.\n8) NUBE: indica cómo desplegarlo y qué servicios usar.\n9) DATOS DE EJEMPLO y pruebas.\n\nPrimero propón el modelo de datos y espera mi aprobación antes de escribir el código.`}rub();
+function prog(){const c=document.querySelectorAll("#ck input"),n=[...c].filter(x=>x.checked).length;$("pb").style.width=(n/c.length*100)+"%"}
+const QZ=[["¿Qué define a un agente inteligente?",["Percibe, decide y actúa para lograr un objetivo","Solo almacena datos","Es una base de datos"],0],["Para una relación N a M entre pedidos y productos necesitas…",["Una tabla intermedia","Una sola columna","Un archivo de texto"],0],["¿Qué herramienta crea diagramas ER a partir de texto?",["dbdiagram.io","Redis","Stripe"],0],["¿Qué conviene pedir primero a Claude?",["El modelo de datos","El diseño del logotipo","El despliegue final"],0]];
+
+const QZ2=[
+["¿Qué define a un agente inteligente?",["Percibe, decide y actúa para lograr un objetivo","Solo almacena datos","Es únicamente una base de datos","Es una hoja de cálculo"],0,"Un agente percibe su entorno, decide y actúa hacia una meta."],
+["¿Qué agente reacciona con reglas si-entonces y no tiene memoria?",["Reflejo simple","Con aprendizaje","Multiagente","Basado en utilidad"],0,"El agente de reflejo simple solo responde a lo que percibe en el momento."],
+["¿Qué agente elige la acción que maximiza una medida de valor?",["Reflejo simple","Basado en utilidad","Basado en modelo","Ninguno de los anteriores"],1,"El agente basado en utilidad compara opciones según su valor (costo, tiempo, riesgo)."],
+["¿Qué agente mejora su desempeño con la experiencia?",["Reflejo simple","Basado en modelo","Con aprendizaje","Basado en reglas fijas"],2,"El agente con aprendizaje se ajusta con datos y retroalimentación."],
+["¿Qué NO es esencial en el prompt para crear un agente?",["Rol y objetivo","Reglas y límites","El color favorito del programador","Herramientas disponibles"],2,"Lo esencial es rol, objetivo, entorno, herramientas, memoria, reglas, formato y criterio de éxito."],
+["¿Para qué sirve definir reglas y límites al agente?",["Evitar acciones no deseadas e invención de datos","Hacerlo más lento","Cambiar el idioma","Eliminar la base de datos"],0,"Los límites reducen errores y acciones riesgosas, como reembolsos sin aprobación."],
+["¿Qué componente contiene la lógica de negocio y los endpoints?",["Frontend","Backend / API","Almacenamiento de archivos","Hosting estático"],1,"El backend o API procesa las reglas del negocio y conecta con la base de datos."],
+["¿Qué componente maneja registro, inicio de sesión y roles?",["Base de datos","Frontend","Autenticación","Monitoreo"],2,"La autenticación controla quién entra y qué puede hacer (JWT, OAuth, etc.)."],
+["¿Dónde conviene guardar imágenes y archivos de un sistema en la nube?",["En almacenamiento de objetos (p. ej. S3)","Dentro de una columna de texto","En el navegador del usuario","En el código fuente"],0,"Servicios como S3 o R2 están hechos para archivos y escalan mejor."],
+["Un cliente tiene muchos pedidos. ¿Qué relación es?",["1 a 1","1 a N","N a M","No hay relación"],1,"Un registro del lado 1 (cliente) se vincula con muchos del lado N (pedidos)."],
+["Pedidos y productos (N a M) se resuelven con…",["Una sola columna","Un archivo de texto","Una tabla intermedia (detalle_pedido)","Duplicar la tabla productos"],2,"La tabla intermedia guarda pedido_id, producto_id, cantidad y precio."],
+["¿Para qué sirve una llave foránea?",["Enlazar una tabla con la llave primaria de otra","Cifrar contraseñas","Acelerar el hosting","Crear gráficos"],0,"Garantiza la integridad referencial entre tablas."],
+["¿Cuál es un gestor relacional de código abierto, robusto y muy usado?",["MongoDB","PostgreSQL","Redis","Firebase Storage"],1,"PostgreSQL es relacional, gratuito y una excelente opción por defecto."],
+["¿Para qué se usa típicamente Redis?",["Modelado ER","Facturación","Diseño de pantallas","Caché y sesiones en memoria"],3,"Redis es una base clave-valor en memoria, muy rápida."],
+["MongoDB almacena la información como…",["Documentos tipo JSON","Solo tablas con filas fijas","Imágenes","Hojas de cálculo"],0,"MongoDB es NoSQL orientada a documentos flexibles."],
+["¿Qué herramienta crea diagramas ER a partir de texto y exporta SQL?",["Stripe","Redis","dbdiagram.io","SendGrid"],2,"dbdiagram.io permite definir el esquema escribiendo y exportar el SQL."],
+["¿Cuál es un cliente SQL multimotor y gratuito?",["SSMS","DBeaver","MySQL Workbench","pgAdmin"],1,"DBeaver se conecta a muchos motores y edita tablas y diagramas."],
+["¿Cuál es el editor oficial de PostgreSQL?",["pgAdmin","HeidiSQL","MongoDB Compass","DB Browser for SQLite"],0,"pgAdmin es la herramienta de administración oficial de PostgreSQL."],
+["Al pedirle un sistema a Claude, ¿qué conviene solicitar primero?",["El código completo sin revisar nada","El modelo de datos y aprobarlo antes del código","Solo el logotipo","El despliegue final"],1,"Validar tablas y relaciones primero evita rehacer todo después."],
+["Si el sistema generado falla en las pruebas, lo mejor es…",["Empezar desde cero siempre","Ignorar el error","Reportar el error con detalle o captura y pedir un ajuste concreto","Cambiar de rubro"],2,"Iterar con mensajes concretos produce correcciones más precisas."]];
+const QA=new Array(QZ2.length).fill(-1);
+function drawQ(){$("qz").innerHTML=`<p class="mu">Responde las 20 preguntas y pulsa «Calificar». La página revisa tus respuestas y te muestra la correcta de cada una.</p>`+QZ2.map((q,i)=>`<div class="box" id="q${i}" style="margin:8px 0"><b>${i+1}. ${q[0]}</b>${q[1].map((o,j)=>`<button data-i="${i}" data-j="${j}" onclick="pick(${i},${j})">${o}</button>`).join("")}<div class="mu" id="fb${i}"></div></div>`).join("")+`<button class="pri" style="width:auto;display:inline-block;color:#fff;border:0" onclick="grade()">Calificar</button> <button class="tb" style="display:inline-block;width:auto" onclick="QA.fill(-1);drawQ()">Reiniciar</button><div class="box" id="res" style="display:none;margin-top:12px"></div>`}
+function pick(i,j){QA[i]=j;document.querySelectorAll(`#q${i} button`).forEach(b=>{b.style.borderColor=+b.dataset.j==j?"var(--ac)":"";b.style.background=+b.dataset.j==j?"var(--ac2)":""})}
+function grade(){let ok=0,blank=0;QZ2.forEach((q,i)=>{const bs=document.querySelectorAll(`#q${i} button`);bs.forEach(b=>{b.className="";b.style.borderColor="";b.style.background=""});if(QA[i]<0)blank++;const good=QA[i]==q[2];if(good)ok++;bs[q[2]].className="good";if(QA[i]>=0&&!good)bs[QA[i]].className="bad";bs.forEach(b=>b.disabled=true);$("fb"+i).innerHTML=(good?"✅ Correcto. ":QA[i]<0?"⚠️ Sin responder. ":"❌ Incorrecto. ")+q[3]});
+const p=Math.round(ok/QZ2.length*100);const m=p>=90?"¡Excelente! Dominas el tema.":p>=70?"Muy bien, repasa los puntos fallados.":p>=50?"Vas bien; revisa los módulos y vuelve a intentar.":"Conviene repasar los módulos y reintentar.";
+const r=$("res");r.style.display="block";r.innerHTML=`<b style="font-size:20px">Resultado: ${ok} / ${QZ2.length} (${p}%)</b><p>${m}${blank?` Dejaste ${blank} sin responder.`:""}</p>`;r.scrollIntoView({block:"center"})}
+drawQ();
+/* menú contextual */
+const cm=$("cm");
+function menu(x,y){const sel=(getSelection()+"").trim();cm.innerHTML=`<div data-a="copy">📋 Copiar selección${sel?"":" (vacía)"}</div><hr>`+secs.map(s=>`<div data-a="go" data-s="${s[0]}">↪ ${s[1]}</div>`).join("")+`<hr><div data-a="theme">🌓 Cambiar tema</div><div data-a="reset">♻️ Reiniciar checklist</div><div data-a="top">⬆️ Arriba</div>`;
+cm.style.display="block";cm.style.left=Math.min(x,innerWidth-230)+"px";cm.style.top=Math.max(8,Math.min(y,innerHeight-cm.offsetHeight-8))+"px";cm.dataset.sel=sel}
+addEventListener("contextmenu",e=>{if(e.target.closest("textarea,input,select"))return;e.preventDefault();menu(e.clientX,e.clientY)});
+$("fab").onclick=e=>{e.stopPropagation();menu(innerWidth-240,innerHeight-420)};
+addEventListener("click",e=>{const d=e.target.closest("#cm div");if(d){const a=d.dataset.a;if(a=="go")$(d.dataset.s).scrollIntoView();if(a=="top")scrollTo(0,0);if(a=="theme"){const r=document.documentElement,dk=r.dataset.theme?r.dataset.theme=="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dk?"light":"dark"}
+if(a=="reset"){document.querySelectorAll("#ck input").forEach(c=>c.checked=false);prog()}
+if(a=="copy"&&cm.dataset.sel){try{navigator.clipboard.writeText(cm.dataset.sel)}catch(_){}}}cm.style.display="none"});
+addEventListener("scroll",()=>cm.style.display="none");
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.s==e.target.id))}),{rootMargin:"-30% 0px -60% 0px"});
+secs.forEach(s=>io.observe($(s[0])));
+</script></body></html>
